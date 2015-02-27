@@ -1,5 +1,4 @@
 import json
-import logging
 import re
 import unicodedata
 
@@ -22,8 +21,6 @@ try:
     import importlib
 except:
     from django.utils import importlib
-
-logger = logging.getLogger(__name__)
 
 
 def _generate_unique_username_base(txts):
@@ -98,7 +95,7 @@ def email_address_exists(email, exclude_user=None):
             users = get_user_model().objects
             if exclude_user:
                 users = users.exclude(pk=exclude_user.pk)
-            ret = users.filter(**{email_field+'__iexact': email}).exists()
+            ret = users.filter(**{email_field + '__iexact': email}).exists()
     return ret
 
 
@@ -195,11 +192,16 @@ def set_form_field_order(form, fields_order):
 
 
 def build_absolute_uri(request, location, protocol=None):
-    logger.debug(request)
     uri = request.build_absolute_uri(location)
     if protocol:
         uri = protocol + ':' + uri.partition(':')[2]
-    return "pindakaas"
+
+    querystring_parts = request.META.get('HTTP_REFERER').split('?')
+    qs = ''
+    if len(querystring_parts) == 2:
+        qs = '?{0}'.format(querystring_parts[1])
+
+    return "{0}{1}".format(uri, qs)
 
 
 def get_form_class(forms, form_id, default_form):
