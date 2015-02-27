@@ -1,16 +1,18 @@
+import json
+import logging
 import re
 import unicodedata
-import json
 
-from django.core.exceptions import ImproperlyConfigured
-from django.core.validators import validate_email, ValidationError
 from django.core import urlresolvers
-from django.db.models import FieldDoesNotExist
-from django.db.models.fields import (DateTimeField, DateField,
-                                     EmailField, TimeField)
-from django.utils import six, dateparse
-from django.utils.datastructures import SortedDict
+from django.core.exceptions import ImproperlyConfigured
 from django.core.serializers.json import DjangoJSONEncoder
+from django.core.validators import ValidationError, validate_email
+from django.db.models import FieldDoesNotExist
+from django.db.models.fields import (DateField, DateTimeField, EmailField,
+                                     TimeField)
+from django.utils import dateparse, six
+from django.utils.datastructures import SortedDict
+
 try:
     from django.utils.encoding import force_text
 except ImportError:
@@ -20,6 +22,8 @@ try:
     import importlib
 except:
     from django.utils import importlib
+
+logger = logging.getLogger(__name__)
 
 
 def _generate_unique_username_base(txts):
@@ -191,6 +195,7 @@ def set_form_field_order(form, fields_order):
 
 
 def build_absolute_uri(request, location, protocol=None):
+    logger.debug(request)
     uri = request.build_absolute_uri(location)
     if protocol:
         uri = protocol + ':' + uri.partition(':')[2]
