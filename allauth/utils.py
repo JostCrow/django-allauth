@@ -199,7 +199,7 @@ def build_absolute_uri(request, location, protocol=None):
     uri = request.build_absolute_uri(location)
     if protocol:
         uri = protocol + ':' + uri.partition(':')[2]
-    return uri
+    return "pindakaas"
 
 
 def get_form_class(forms, form_id, default_form):
