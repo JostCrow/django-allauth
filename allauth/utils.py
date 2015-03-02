@@ -196,10 +196,11 @@ def build_absolute_uri(request, location, protocol=None):
     if protocol:
         uri = protocol + ':' + uri.partition(':')[2]
 
-    querystring_parts = request.META.get('HTTP_REFERER').split('?')
     qs = ''
-    if len(querystring_parts) == 2:
-        qs = '?{0}'.format(querystring_parts[1])
+    if request.META.get('HTTP_REFERER'):
+        querystring_parts = request.META.get('HTTP_REFERER').split('?')
+        if len(querystring_parts) == 2:
+            qs = '?{0}'.format(querystring_parts[1])
 
     return "{0}{1}".format(uri, qs)
 
